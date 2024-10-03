@@ -54,7 +54,7 @@ spec:
     spec:
       containers:
       - name: server
-        image: $APP_NAME.azurecr.io/client:$VERSION
+        image: $APP_NAME.azurecr.io/server:$VERSION
         ports:
           - containerPort: 5001
         env:
