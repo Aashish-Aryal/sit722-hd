@@ -22,11 +22,6 @@ jobs:
       APP_NAME: ${{ secrets.APP_NAME }}
       VERSION: ${{ github.sha }}
       REGISTRY_PW: ${{ secrets.REGISTRY_PW  }}
-      MONGO_URL: ${{ secrets.MONGO_URL }}
-      JWT_SECRET: ${{ secrets.JWT_SECRET }}
-      CLOUD_NAME: ${{ secrets.CLOUD_NAME }}
-      CLOUD_API_KEY: ${{ secrets.CLOUD_API_KEY }}
-      CLOUD_API_SECRET: ${{ secrets.CLOUD_API_SECRET }}
 
 
     steps:

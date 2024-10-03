@@ -59,30 +59,15 @@ spec:
           - containerPort: 5001
         env:
           - name: mongo_url
-            valueFrom:
-              secretKeyRef:
-                name: app-secrets
-                key: mongo_url
+            value: "mongodb+srv://shmp:shmp@cluster27.d6hauw2.mongodb.net/shmp?retryWrites=true&w=majority"
           - name: jwt_secret
-            valueFrom:
-              secretKeyRef:
-                name: app-secrets
-                key: jwt_secret
+            value: "shmp"
           - name: cloud_name
-            valueFrom:
-              secretKeyRef:
-                name: app-secrets
-                key: cloud_name
+            value: "dejm9izfx"
           - name: cloud_api_key
-            valueFrom:
-              secretKeyRef:
-                name: app-secrets
-                key: cloud_api_key
+            value: "555179651852497"
           - name: cloud_api_secret
-            valueFrom:
-              secretKeyRef:
-                name: app-secrets
-                key: cloud_api_secret
+            value: "BueLBWwGGQkuf6BjLM2n8v4pJRM"
 
 ---
 
