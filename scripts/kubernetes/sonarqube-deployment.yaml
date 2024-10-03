@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: postgres
-        image: postgres:12
+        image: postgres:alpine
         env:
         - name: POSTGRES_USER
           value: sonar
@@ -60,12 +60,12 @@ spec:
     spec:
       containers:
       - name: sonarqube
-        image: sonarqube:community
+        image: sonarqube
         ports:
         - containerPort: 9000
         env:
         - name: SONARQUBE_JDBC_URL
-          value: jdbc:postgresql://sonarqube-postgres/sonarqube
+          value: jdbc:postgresql://db:5432/sonarqube
         - name: SONARQUBE_JDBC_USERNAME
           value: sonar
         - name: SONARQUBE_JDBC_PASSWORD

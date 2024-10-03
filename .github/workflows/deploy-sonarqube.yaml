@@ -1,4 +1,4 @@
-name: Deploy SonarQube to AKS
+name: Deploy SonarQube
 
 on:
   workflow_dispatch:  # Trigger the workflow manually
@@ -11,16 +11,13 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Set up kubectl with KUBE_CONFIG
+    - name: Set up kubectl
       uses: tale/kubectl-action@v1
       with:
         base64-kube-config: ${{ secrets.KUBE_CONFIG }}
         kubectl-version: v1.24.2
 
     # Deploy SonarQube
-    - name: Deploy PostgreSQL
+    - name: Deploy SonarQube
       run: kubectl apply -f ./scripts/kubernetes/sonarqube-deployment.yaml
 
-    # Wait for SonarQube LoadBalancer IP (to view in GitHub Actions log)
-    - name: Wait for SonarQube LoadBalancer IP
-      run: kubectl get svc sonarqube --watch --namespace default
