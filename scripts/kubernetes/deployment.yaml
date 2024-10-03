@@ -15,10 +15,10 @@ spec:
     spec:
       containers:
       - name: client
-        image: client:latest
+        image: $APP_NAME.azurecr.io/client:$VERSION
         ports:
-        - containerPort: 3000
-
+          - containerPort: 3000
+      
 ---
 
 # Service for the client deployment
@@ -43,6 +43,59 @@ kind: Deployment
 metadata:
   name: server-deployment
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
+      app: server
+  template:
+    metadata:
+      labels:
+        app: server
+    spec:
+      containers:
+      - name: server
+        image: $APP_NAME.azurecr.io/client:$VERSION
+        ports:
+          - containerPort: 5001
+        env:
+          - name: mongo_url
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: mongo_url
+          - name: jwt_secret
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: jwt_secret
+          - name: cloud_name
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: cloud_name
+          - name: cloud_api_key
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: cloud_api_key
+          - name: cloud_api_secret
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: cloud_api_secret
+
+---
+
+# Service for the server deployment
+apiVersion: v1
+kind: Service
+metadata:
+  name: server-service
+spec:
+  selector:
+    app: server
+  ports:
+  - protocol: TCP
+    port: 5001
+    targetPort: 5001
+  type: ClusterIP

@@ -1,0 +1,65 @@
+# GitHub Actions Workflow
+
+# Automatically deploys the microservices to Kubernetes on push to the main branch.
+
+name: Deploy to Kubernetes
+
+on:
+  # Deploy the microservice on push to any branch of this code repository.
+  # push:
+    # branches:
+      # - main
+
+  # Allows deployment to be invoked manually through the GitHub Actions user interface.
+  workflow_dispatch:
+    
+jobs:
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      APP_NAME: ${{ secrets.APP_NAME }}
+      VERSION: ${{ github.sha }}
+      REGISTRY_PW: ${{ secrets.REGISTRY_PW  }}
+      MONGO_URL: ${{ secrets.MONGO_URL }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      CLOUD_NAME: ${{ secrets.CLOUD_NAME }}
+      CLOUD_API_KEY: ${{ secrets.CLOUD_API_KEY }}
+      CLOUD_API_SECRET: ${{ secrets.CLOUD_API_SECRET }}
+
+
+    steps:
+
+      # Checks-out your repository under $GITHUB_WORKSPACE.
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Make scripts executable
+      - name: Make build-image.sh executable
+        run: chmod +x ./scripts/build-image.sh
+
+      - name: Make push-image.sh executable
+        run: chmod +x ./scripts/push-image.sh
+
+      - name: Make deploy.sh executable
+        run: chmod +x ./scripts/deploy.sh
+
+      # Builds the Docker image.
+      - name: Build
+        run: bash ./scripts/build-image.sh
+
+      # Publishes the Docker image to the container registry.
+      - name: Publish
+        run: bash ./scripts/push-image.sh
+
+      # Installs Kubectl and connects it to the cluster.
+      # https://github.com/marketplace/actions/kubernetes-cli-kubectl
+      - uses: tale/kubectl-action@v1
+        with:
+          base64-kube-config: ${{ secrets.KUBE_CONFIG }}
+          kubectl-version: v1.24.2
+      
+      # Expands the configuration template and deploys the microservice.
+      - name: Deploy
+        run: ./scripts/deploy.sh
