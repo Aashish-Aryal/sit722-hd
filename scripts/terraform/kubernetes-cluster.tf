@@ -10,8 +10,8 @@ resource "azurerm_kubernetes_cluster" "cluster" {
 
     default_node_pool {
         name            = "default"
-        node_count      = 1
-        vm_size         = "Standard_B2s"
+        node_count      = 2 # Increase the number of node
+        vm_size         = "Standard_D2s_v3" # Increase VM size for SonarQube, Prometheus and Grafana
     }
 
     #
