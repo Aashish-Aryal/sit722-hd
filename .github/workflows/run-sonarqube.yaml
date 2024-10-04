@@ -1,0 +1,35 @@
+name: SonarQube Code Quality Check
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  sonarQubeScan:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    # Set up Node.js environment
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.9.1'  # Use the Node.js version you prefer or your app requires
+
+    # SonarQube scan
+    - name: SonarQube Scan
+      env:
+        SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
+        SONAR_HOST_URL: ${{ secrets.SONARQUBE_HOST_URL }}
+      run: |
+        npx sonar-scanner \
+          -Dsonar.projectKey=sit722 \
+          -Dsonar.sources=. \
+          -Dsonar.host.url=${{ secrets.SONARQUBE_HOST_URL }} \
+          -Dsonar.login=${{ secrets.SONARQUBE_TOKEN }}
